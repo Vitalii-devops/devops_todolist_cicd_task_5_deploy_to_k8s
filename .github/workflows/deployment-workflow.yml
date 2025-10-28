@@ -17,6 +17,9 @@ on:
       helm-release-name:
         default: todoapp
         type: string
+      image-repository:
+        required: true
+        type: string
 jobs:
     deploy-helm:
       name: ${{ inputs.environment }}
@@ -63,6 +66,7 @@ jobs:
           --set todoapp.secrets.DB_PASSWORD="${{ secrets.DB_PASSWORD }}" \
           --set todoapp.secrets.DB_HOST="${{ secrets.DB_HOST }}" \
           --set todoapp.image.tag="${{ inputs.version }}"
+          --set todoapp.image.repository="${{ inputs.image-repository }}"
       - name: Deploy helm to Development
         run: |
           helm upgrade --install --atomic --wait --timeout 180s --debug ${{ inputs.helm-release-name }} ./todoapp-*.tgz \
@@ -76,3 +80,4 @@ jobs:
           --set todoapp.secrets.DB_PASSWORD="${{ secrets.DB_PASSWORD }}" \
           --set todoapp.secrets.DB_HOST="${{ secrets.DB_HOST }}" \
           --set todoapp.image.tag="${{ inputs.version }}"
+          --set todoapp.image.repository="${{ inputs.image-repository }}"
